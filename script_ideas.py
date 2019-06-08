@@ -1,23 +1,71 @@
-# all taken straight from Kostas Persifanos video on authorship attribution
-# https://www.youtube.com/watch?v=dBqyvpfHy8k
-
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import FeatureUnion
 import pandas as pd
+import numpy as np
 import nltk
+import os
+from os import listdir
+from os.path import isfile, join, isdir
+import json
 
-def load_corpus(input_dir):
-    trainfiles = [ f for f in listdir(input_dir) if isfile(join(input_dir ,f))]
-    trainset = []
-    for filename in trainfiles:
-        df = pd.read_csv( input_dir + "/" + filename , sep="\t",
-            dtype={ "id":object, "text":object } )
-        for row in df["text"]:
-            trainset.append({"label":filename, "text": row})
+def load_train(input_dir):
+    # lists of dictionaries for dataframes
+    dicts = []
     
-    return trainset
+    # for every directory in problem1 or 2
+    for direc in listdir(input_dir):
+        
+        # if that directory is a candidate directory
+        if "candidate" in (input_dir + "/" + direc):
+            # create a list to fill in txts as strings from that candidate
+            lst = []
+            
+            # for every file in the candidate directory, read and add every txt to lst
+            for fin in listdir(input_dir + "/" + direc):
+                #print(fin)
+                f_txt = open(input_dir + "/" + direc + "/" + fin)
+                f = f_txt.read()
+                # add that file to lst
+                lst.append(f)
+                f_txt.close()
 
-# 10:50 = feature extraction
-# 12:50 = putting features together into word features
-# 17:30 evaluation
+            dict1 = {"text": lst, 
+            "author": str(direc),}
+            dicts.append(dict1)
 
+    train = pd.DataFrame(dicts, columns=["text", "author"])
+
+    return train
+
+def load_test(input_dir):
+    test_dicts = []
+    
+    # convert json file into dataframe
+    with open(input_dir + "/" + "ground-truth.json") as data:
+        data = json.loads(data.read())
+        for el in data.get("ground_truth"):
+            # print(el, type(el))
+            dict1 = {"text": el.get("unknown-text"), 
+                "author": el.get("true-author")}
+            test_dicts.append(dict1)
+
+        test = pd.DataFrame(test_dicts, columns=["text", "author"])
+
+    # read and insert txt files in text row
+    for i, row in enumerate(test.itertuples()):
+        for fin in listdir(input_dir + "/" + "unknown"):
+            if str(fin) == str(row[1]):
+                # print(fin)
+                with open(input_dir + "/" + "unknown" + "/" + fin) as txt:
+                    test.loc[i, "text"] = txt.read()
+    
+    return test
+
+train1 = load_train("pan18-cross-domain-authorship-attribution-training-dataset-2017-12-02/problem00001")
+test1 = load_test("pan18-cross-domain-authorship-attribution-training-dataset-2017-12-02/problem00001")
+train2 = load_train("pan18-cross-domain-authorship-attribution-training-dataset-2017-12-02/problem00002")
+test2 = load_test("pan18-cross-domain-authorship-attribution-training-dataset-2017-12-02/problem00002")
+train1.to_excel("train1.xlsx")
+test1.to_excel("test1.xlsx")
+train2.to_excel("train2.xlsx")
+test2.to_excel("test2.xlsx")
