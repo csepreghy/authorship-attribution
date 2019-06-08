@@ -35,6 +35,7 @@ def load_train(input_dir):
             dicts.append(dict1)
 
     train = pd.DataFrame(dicts, columns=["text", "author"])
+    train['text']=[" ".join(txt) for txt in train['text'].values]
 
     return train
 
