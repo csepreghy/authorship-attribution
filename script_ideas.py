@@ -13,13 +13,12 @@ def load_train(input_dir):
     # lists of dictionaries for dataframes
     dicts = []
     
-    # for every directory in problem1 or 2
+    # for every candidate in problem1 or 2
     for direc in listdir(input_dir):
-        
-        # if that directory is a candidate directory
-        if "candidate" in (input_dir + "/" + direc):
+        if "candidate" in (direc):
+            # print(direc)
             # create a list to fill in txts as strings from that candidate
-            lst = []
+            #lst = []
             
             # for every file in the candidate directory, read and add every txt to lst
             for fin in listdir(input_dir + "/" + direc):
@@ -27,15 +26,16 @@ def load_train(input_dir):
                 f_txt = open(input_dir + "/" + direc + "/" + fin)
                 f = f_txt.read()
                 # add that file to lst
-                lst.append(f)
+                #lst.append(f)
                 f_txt.close()
 
-            dict1 = {"text": lst, 
-            "author": str(direc),}
-            dicts.append(dict1)
+                dict1 = {"text": f, 
+                "author": str(direc),}
+                dicts.append(dict1)
+    # print(len(dicts))
 
     train = pd.DataFrame(dicts, columns=["text", "author"])
-    train['text']=[" ".join(txt) for txt in train['text'].values]
+    #train['text']=[" ".join(txt) for txt in train['text'].values]
 
     return train
 
@@ -78,12 +78,17 @@ train1.to_pickle("data/train1.pkl")
 test1.to_pickle("data/test1.pkl")
 train2.to_pickle("data/train2.pkl")
 test2.to_pickle("data/test2.pkl")
+# train2.to_excel("data/train2.xlsx")
+# train1.to_excel("data/train1.xlsx")
 
 train1_df = load_pickle('data/train1.pkl')
 test1_df = load_pickle('data/test1.pkl')
 train2_df = load_pickle('data/train2.pkl')
 test2_df = load_pickle('data/test2.pkl')
 
-print(train2_df.head())
-print(test1_df.head())
+# print(train1_df.head(), len(train1_df))
+# print(test1_df.head())
 
+# it is a list of strings!!
+# print(type(train2_df.iloc[1,0]), len(train2_df.iloc[1,0]))
+# print([type(txt) for i, txt in enumerate(train2_df.iloc[1,0])])
