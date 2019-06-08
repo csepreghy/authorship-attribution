@@ -7,6 +7,7 @@ import os
 from os import listdir
 from os.path import isfile, join, isdir
 import json
+import pickle
 
 def load_train(input_dir):
     # lists of dictionaries for dataframes
@@ -60,12 +61,28 @@ def load_test(input_dir):
                     test.loc[i, "text"] = txt.read()
     
     return test
+  
+def load_pickle(filename):
+  with open(filename, 'rb') as f:
+    df = pickle.load(f)
+
+  return df
 
 train1 = load_train("pan18-cross-domain-authorship-attribution-training-dataset-2017-12-02/problem00001")
 test1 = load_test("pan18-cross-domain-authorship-attribution-training-dataset-2017-12-02/problem00001")
 train2 = load_train("pan18-cross-domain-authorship-attribution-training-dataset-2017-12-02/problem00002")
 test2 = load_test("pan18-cross-domain-authorship-attribution-training-dataset-2017-12-02/problem00002")
-train1.to_excel("train1.xlsx")
-test1.to_excel("test1.xlsx")
-train2.to_excel("train2.xlsx")
-test2.to_excel("test2.xlsx")
+
+train1.to_pickle("data/train1.pkl")
+test1.to_pickle("data/test1.pkl")
+train2.to_pickle("data/train2.pkl")
+test2.to_pickle("data/test2.pkl")
+
+train1_df = load_pickle('data/train1.pkl')
+test1_df = load_pickle('data/test1.pkl')
+train2_df = load_pickle('data/train2.pkl')
+test2_df = load_pickle('data/test2.pkl')
+
+print(train2_df.head())
+print(test1_df.head())
+
