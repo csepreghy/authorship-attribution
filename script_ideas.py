@@ -17,8 +17,6 @@ def load_train(input_dir):
     for direc in listdir(input_dir):
         if "candidate" in (direc):
             # print(direc)
-            # create a list to fill in txts as strings from that candidate
-            #lst = []
             
             # for every file in the candidate directory, read and add every txt to lst
             for fin in listdir(input_dir + "/" + direc):
@@ -36,7 +34,7 @@ def load_train(input_dir):
 
     train = pd.DataFrame(dicts, columns=["text", "author"])
     #train['text']=[" ".join(txt) for txt in train['text'].values]
-
+    
     return train
 
 def load_test(input_dir):

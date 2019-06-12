@@ -25,6 +25,9 @@ def extract_features(df, words = False, chars = False, pos_tags = False, ngram=(
     # corpus to train on as list of strings
     corpus = df['text'].tolist()
 
+    # set printf
+    pr = False
+
     if words:
         word_vectorizer = TfidfVectorizer(analyzer = "word", ngram_range = ngram, binary = False)
         
@@ -33,8 +36,7 @@ def extract_features(df, words = False, chars = False, pos_tags = False, ngram=(
         
         # df['text']=list(vect)
         df['text'] = list(vect.toarray())
-        print = False
-        if print:
+        if pr:
             for row in df["text"]:
                 print(row.shape)
         
@@ -50,6 +52,9 @@ def extract_features(df, words = False, chars = False, pos_tags = False, ngram=(
         char_grams = char_vectorizer.fit_transform(df["text"])
 
         df["text"] = list(char_grams.toarray())
+        if pr:
+            for row in df["text"]:
+                print(row.shape)
 
         return df
         
@@ -76,10 +81,15 @@ def extract_features(df, words = False, chars = False, pos_tags = False, ngram=(
         
         # vectorize tag corpus
         tag_vectorizer = TfidfVectorizer(analyzer = "word", ngram_range = (2,2), binary = False)
-        tag_grams = tag_vectorizer.fit_transform(corpus)
-        tag_array = tag_grams.toarray()
-        tag_array = np.hstack((tag_array, labels))
-        return tag_array
+        
+        tag_grams = tag_vectorizer.fit_transform(df["text"])
+
+        df["text"] = list(tag_grams.toarray())
+
+        # tag_grams = tag_vectorizer.fit_transform(corpus)
+        # tag_array = tag_grams.toarray()
+        # tag_array = np.hstack((tag_array, labels))
+        return df
 
 word_2_grams = extract_features(train1_df, words=True, chars=False, pos_tags = False)
 print(word_2_grams)#, word_2_grams.shape)
