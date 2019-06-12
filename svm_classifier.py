@@ -3,8 +3,10 @@ from sklearn.svm import SVC
 
 def run_svm(df):
     # apparently works better transforming the columns to lists
-    features = df["p_truth_E"].tolist()
-    labels = df["Truth"].tolist()
+    features = df["text"].tolist()
+    # print(len(features))
+    labels = df["author"].tolist()
+    # print(len(labels))
 
     clf = SVC(gamma="auto", kernel="linear")
     clf.fit(features, labels)
