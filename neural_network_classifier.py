@@ -11,8 +11,6 @@ from tensorflow.keras.callbacks import History
 
 history = History()
 
-
-
 def df_to_dataset(dataframe, shuffle=True, batch_size=32):
   dataframe = dataframe.copy()
   labels = dataframe.pop('Truth')

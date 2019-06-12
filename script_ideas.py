@@ -23,7 +23,7 @@ def load_train(input_dir):
             # for every file in the candidate directory, read and add every txt to lst
             for fin in listdir(input_dir + "/" + direc):
                 #print(fin)
-                f_txt = open(input_dir + "/" + direc + "/" + fin)
+                f_txt = open(input_dir + "/" + direc + "/" + fin, "r+", encoding="utf-8")
                 f = f_txt.read()
                 # add that file to lst
                 #lst.append(f)
@@ -58,7 +58,7 @@ def load_test(input_dir):
         for fin in listdir(input_dir + "/" + "unknown"):
             if str(fin) == str(row[1]):
                 # print(fin)
-                with open(input_dir + "/" + "unknown" + "/" + fin) as txt:
+                with open(input_dir + "/" + "unknown" + "/" + fin, "r", encoding="utf-8") as txt:
                     test.loc[i, "text"] = txt.read()
     
     return test
@@ -85,10 +85,3 @@ train1_df = load_pickle('data/train1.pkl')
 test1_df = load_pickle('data/test1.pkl')
 train2_df = load_pickle('data/train2.pkl')
 test2_df = load_pickle('data/test2.pkl')
-
-# print(train1_df.head(), len(train1_df))
-# print(test1_df.head())
-
-# it is a list of strings!!
-# print(type(train2_df.iloc[1,0]), len(train2_df.iloc[1,0]))
-# print([type(txt) for i, txt in enumerate(train2_df.iloc[1,0])])

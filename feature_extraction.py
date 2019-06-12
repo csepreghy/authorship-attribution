@@ -8,6 +8,7 @@ train1_df = load_pickle('data/train1.pkl')
 train2_df = load_pickle('data/train2.pkl')
 
 def extract_features(df, words = False, chars = False, pos_tags = False, ngram=(2,2)):
+    
     # encode labels as integers
     df = df.replace({'candidate00001': 1,'candidate00002': 2,'candidate00003': 3,
     'candidate00004': 4,'candidate00005': 5,'candidate00006': 6,'candidate00007': 7,
@@ -19,24 +20,43 @@ def extract_features(df, words = False, chars = False, pos_tags = False, ngram=(
     # convert labels into np array column
     # i absolutely presume that the arrays of vectorizers her are outputted in same order as they are inputted!
     labels = df["author"].to_numpy()
-    labels = labels.reshape(labels.shape[0],1)
+    # labels = labels.reshape(labels.shape[0],1)
     
     # corpus to train on as list of strings
     corpus = df['text'].tolist()
 
     if words:
         word_vectorizer = TfidfVectorizer(analyzer = "word", ngram_range = ngram, binary = False)
-        word_grams = word_vectorizer.fit_transform(corpus)
-        word_array = word_grams.toarray()
-        word_array = np.hstack((word_array, labels))
-        return word_array
+        
+        # returning features as dataframe
+        vect = word_vectorizer.fit_transform(df['text'])
+        
+        # df['text']=list(vect)
+        df['text'] = list(vect.toarray())
+        print = False
+        if print:
+            for row in df["text"]:
+                print(row.shape)
+        
+        # word_grams = word_vectorizer.fit_transform(corpus)
+        # word_array = word_grams.toarray()
+        # word_array = np.hstack((word_array, labels))
+        # return word_array
+        return df
     
     if chars:
         char_vectorizer = TfidfVectorizer(analyzer = "char", ngram_range = ngram, binary = False, min_df = 0)
-        char_grams = char_vectorizer.fit_transform(corpus)
-        char_array = char_grams.toarray()
-        char_array = np.hstack((char_array, labels))
-        return char_array
+        # char_grams = char_vectorizer.fit_transform(corpus)
+        char_grams = char_vectorizer.fit_transform(df["text"])
+
+        df["text"] = list(char_grams.toarray())
+
+        return df
+        
+        
+        # char_array = char_grams.toarray()
+        # char_array = np.hstack((char_array, labels))
+        # return char_array
     
     if pos_tags:
         # tokenize every text
@@ -62,5 +82,5 @@ def extract_features(df, words = False, chars = False, pos_tags = False, ngram=(
         return tag_array
 
 word_2_grams = extract_features(train1_df, words=True, chars=False, pos_tags = False)
-print(word_2_grams, word_2_grams.shape)
+print(word_2_grams)#, word_2_grams.shape)
 # extract_features(train2_df, chars = True)
