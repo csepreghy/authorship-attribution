@@ -6,7 +6,7 @@ def run_svm(df):
     features = df["p_truth_E"].tolist()
     labels = df["Truth"].tolist()
 
-    clf = SVC(gamma="auto")
+    clf = SVC(gamma="auto", kernel="linear")
     clf.fit(features, labels)
     
     return SVC.score(clf, features, labels)
