@@ -22,15 +22,49 @@ def extract_features(df, func, pos_tags=False):
     'candidate00020': 20,})
 
     # convert labels into np array column, one hot encoded
-    one_hot = pd.get_dummies(df['author'])
-    one_hot = pd.Series([row for row in one_hot.values])
-    # df = df.drop("author")
-    # df = df.join(one_hot)
-    df.merge(one_hot.to_frame(), left_index=True, right_index=True)
+    one_hot_df = pd.get_dummies(df['author'], prefix='author')
+    labels = []
 
-    # returning features dataframe
+    for index, row in one_hot_df.iterrows():
+      a1 = row['author_1']
+      a2 = row['author_2']
+      a3 = row['author_3']
+      a4 = row['author_4']
+      a5 = row['author_5']
+      a6 = row['author_6']
+      a7 = row['author_7']
+      a8 = row['author_8']
+      a9 = row['author_9']
+      a10 = row['author_10']
+      a11 = row['author_11']
+      a12 = row['author_12']
+      a13 = row['author_13']
+      a14 = row['author_14']
+      a15 = row['author_15']
+      a16 = row['author_16']
+      a17 = row['author_17']
+      a18 = row['author_18']
+      a19 = row['author_19']
+      a20 = row['author_20']
+      
+      label_row = [a1, a2, a3, a4, a5, a6, a7, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20]
+      labels.append(label_row)
+
+    df['author_one_hot'] = labels
+
     feats = func.fit_transform(df['text'])
     df['text'] = list(feats.toarray())
+    
+    print('labels_df.head()', df.head())
+    
+
+
+    # one_hot = pd.Series([row for row in one_hot.values])
+    # df = df.drop("author")
+    # df = df.join(one_hot)
+    # df.merge(one_hot.to_frame(), left_index=True, right_index=True)
+
+    # returning features dataframe
     
     return df
     
@@ -63,5 +97,5 @@ def extract_features(df, func, pos_tags=False):
         return df
 
 word_2_grams = extract_features(train1_df, TfidfVectorizer(analyzer = "word", ngram_range = (2,2), binary = False))
-print(word_2_grams)#, word_2_grams.shape)
+# print(word_2_grams)#, word_2_grams.shape)
 # extract_features(train2_df, chars = True)
