@@ -26,6 +26,6 @@ df = posf_tr1.rename(columns={"text": "p_truth_E", "author": "Truth"})
 # print(df.columns)
 
 # model = run_neural_network(df, batch_size=5, hidden_layers=[128, 128], n_epochs=5)
-# model = run_xgboost(df)
-model = run_svm(df)
+model = run_xgboost(df)
+# model = run_svm(df)
 print(model)
