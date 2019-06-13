@@ -21,7 +21,6 @@ plotify = Plotify()
 
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
 
 X_train = np.array(X_train)
 X_test = np.array(X_test)
@@ -30,16 +29,17 @@ y_test = np.array(y_test)
 
 # define model
 model = Sequential()
-model.add(Dense(128, input_dim=len(X_train[0]), activation='relu', kernel_initializer='he_uniform'))
-model.add(Dense(128, input_dim=256, activation='relu', kernel_initializer='he_uniform'))
+model.add(Dense(2048, input_dim=len(X_train[0]), activation='relu', kernel_initializer='he_uniform'))
+model.add(Dense(1024, input_dim=2048, activation='relu',kernel_initializer='he_uniform'))
+model.add(Dense(1024, input_dim=2048, activation='relu',kernel_initializer='he_uniform'))
 
 model.add(Dense(19, activation='softmax'))
-opt = SGD(lr=0.005, momentum=0.5)
+opt = SGD(lr=0.01, momentum=0.9)
 model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
 print('X_train.shape', X_train.shape)
 
-history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=100, verbose=0)
+history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=105, verbose=0)
 
 # evaluate the model
 _, train_acc = model.evaluate(X_train, y_train, verbose=0)
