@@ -80,4 +80,3 @@ count_tr1_char_5 = extract_features(train1_df, CountVectorizer(analyzer = "char"
 #     acc = run_svm(model)
 #     print(acc)
 """
-
