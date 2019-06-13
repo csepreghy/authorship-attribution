@@ -43,7 +43,7 @@ def load_test(input_dir):
                 "author": el.get("true-author"), "length": 0}
             test_dicts.append(dict1)
 
-        test = pd.DataFrame(test_dicts, columns=["text", "author"])
+        test = pd.DataFrame(test_dicts, columns=["text", "author", "length"])
 
     # read and insert txt files in text row
     for i, row in enumerate(test.itertuples()):
@@ -51,9 +51,15 @@ def load_test(input_dir):
             if str(fin) == str(row[1]):
                 with open(input_dir + "/" + "unknown" + "/" + fin, "r", encoding="utf-8") as txt:
                     test.loc[i, "text"] = txt.read()
-                    test.loc[i, "length"] = len(txt.read())
+                    test.loc[i, "length"] = len(test.loc[i, "text"])
     
     return test
+
+def merge_data(df1, df2):
+    frames = [df1, df2]
+    df = pd.concat(frames)
+    df.reset_index(drop=True)
+    return df
   
 def load_pickle(filename):
   with open(filename, 'rb') as f:
@@ -65,6 +71,10 @@ train1 = load_train("pan18-cross-domain-authorship-attribution-training-dataset-
 test1 = load_test("pan18-cross-domain-authorship-attribution-training-dataset-2017-12-02/problem00001")
 train2 = load_train("pan18-cross-domain-authorship-attribution-training-dataset-2017-12-02/problem00002")
 test2 = load_test("pan18-cross-domain-authorship-attribution-training-dataset-2017-12-02/problem00002")
+
+set1 = merge_data(train1, test1)
+
+# print("full set 1: ", set1, set1.columns)
 
 train1.to_pickle("data/train1.pkl")
 test1.to_pickle("data/test1.pkl")

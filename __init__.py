@@ -22,10 +22,12 @@ test2_df = load_pickle('data/test2.pkl')
 
 # print("svm w/ countvectorizer on n-gram chars")
 count_tr1_char_1 = extract_features(train1_df, CountVectorizer(analyzer = "char", ngram_range=(1,1), binary = False))
-# print(run_svm(count_tr1_char_1))
-count_tr1_char_2 = extract_features(train1_df, CountVectorizer(analyzer = "char", ngram_range=(2,2), binary = False, max_features=1000))
-count_tr1_char_2.to_pickle('word_2_grams_1000feat.pkl')
-# print(run_svm(count_tr1_char_1))
+print(count_tr1_char_1.head())
+
+"""
+print(run_svm(count_tr1_char_1))
+count_tr1_char_2 = extract_features(train1_df, CountVectorizer(analyzer = "char", ngram_range=(2,2), binary = False))
+print(run_svm(count_tr1_char_1))
 count_tr1_char_3 = extract_features(train1_df, CountVectorizer(analyzer = "char", ngram_range=(3,3), binary = False))
 # print(run_svm(count_tr1_char_1))
 count_tr1_char_4 = extract_features(train1_df, CountVectorizer(analyzer = "char", ngram_range=(4,4), binary = False))
@@ -77,3 +79,5 @@ count_tr1_char_5 = extract_features(train1_df, CountVectorizer(analyzer = "char"
 # for model in [tr1_pos_1, tr1_pos_2, tr1_pos_3, tr1_pos_4, tr1_pos_5]:
 #     acc = run_svm(model)
 #     print(acc)
+"""
+
