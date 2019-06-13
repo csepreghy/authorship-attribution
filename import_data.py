@@ -20,20 +20,15 @@ def load_train(input_dir):
             
             # for every file in the candidate directory, read and add every txt to lst
             for fin in listdir(input_dir + "/" + direc):
-                #print(fin)
                 f_txt = open(input_dir + "/" + direc + "/" + fin, "r+", encoding="utf-8")
                 f = f_txt.read()
-                # add that file to lst
-                #lst.append(f)
                 f_txt.close()
 
                 dict1 = {"text": f, 
-                "author": str(direc),}
+                "author": str(direc), "length": len(f)}
                 dicts.append(dict1)
-    # print(len(dicts))
 
-    train = pd.DataFrame(dicts, columns=["text", "author"])
-    #train['text']=[" ".join(txt) for txt in train['text'].values]
+    train = pd.DataFrame(dicts, columns=["text", "author", "length"])
     
     return train
 
@@ -44,9 +39,8 @@ def load_test(input_dir):
     with open(input_dir + "/" + "ground-truth.json") as data:
         data = json.loads(data.read())
         for el in data.get("ground_truth"):
-            # print(el, type(el))
             dict1 = {"text": el.get("unknown-text"), 
-                "author": el.get("true-author")}
+                "author": el.get("true-author"), "length": 0}
             test_dicts.append(dict1)
 
         test = pd.DataFrame(test_dicts, columns=["text", "author"])
@@ -55,9 +49,9 @@ def load_test(input_dir):
     for i, row in enumerate(test.itertuples()):
         for fin in listdir(input_dir + "/" + "unknown"):
             if str(fin) == str(row[1]):
-                # print(fin)
                 with open(input_dir + "/" + "unknown" + "/" + fin, "r", encoding="utf-8") as txt:
                     test.loc[i, "text"] = txt.read()
+                    test.loc[i, "length"] = len(txt.read())
     
     return test
   
@@ -76,8 +70,6 @@ train1.to_pickle("data/train1.pkl")
 test1.to_pickle("data/test1.pkl")
 train2.to_pickle("data/train2.pkl")
 test2.to_pickle("data/test2.pkl")
-# train2.to_excel("data/train2.xlsx")
-# train1.to_excel("data/train1.xlsx")
 
 train1_df = load_pickle('data/train1.pkl')
 test1_df = load_pickle('data/test1.pkl')

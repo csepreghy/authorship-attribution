@@ -1,15 +1,12 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.pipeline import FeatureUnion
-import nltk
-from script_ideas import load_pickle
-import numpy as np
 from sklearn.preprocessing import OneHotEncoder
+# from import_data import load_pickle
+import numpy as np
 import pandas as pd
+import nltk
 
-train1_df = load_pickle('data/train1.pkl')
-train2_df = load_pickle('data/train2.pkl')
-
-# outputs lists of numpy arrays
+# train1_df = load_pickle('data/train1.pkl')
+# train2_df = load_pickle('data/train2.pkl')
 
 def extract_features(df, func, pos_tags=False):
     
@@ -51,51 +48,16 @@ def extract_features(df, func, pos_tags=False):
       labels.append(label_row)
 
     df['author_one_hot'] = labels
-
-    feats = func.fit_transform(df['text'])
-    df['text'] = list(feats.toarray())
-    
-    print('labels_df.head()', df.head())
-    
-
-
-    # one_hot = pd.Series([row for row in one_hot.values])
-    # df = df.drop("author")
-    # df = df.join(one_hot)
-    # df.merge(one_hot.to_frame(), left_index=True, right_index=True)
-
-    # returning features dataframe
-    
-    return df
     
     if pos_tags:
         # tokenize every text
-        tokenized_corpus = [nltk.word_tokenize(txt) for txt in corpus]
-        
+        df["text"] = df["text"].apply(lambda txt: nltk.word_tokenize(txt)) # or sent tokenize, no word tokenize is better
         # annotate every text as [(word, pos-tag), (word, pos-tag), ...]
-        pos_corpus = [nltk.pos_tag(txt) for txt in tokenized_corpus]
-        
-        # remove the words from the tuples
-        corpus = []
-        for txt in pos_corpus:
-            # print(len(txt))
-            text = []
-            for (word, tag) in txt:
-                text.append(tag)
-            corpus.append(str(text))
-        
-        # vectorize tag corpus
-        tag_vectorizer = TfidfVectorizer(analyzer = "word", ngram_range = (2,2), binary = False)
-        
-        tag_grams = tag_vectorizer.fit_transform(df["text"])
-
-        df["text"] = list(tag_grams.toarray())
-
-        # tag_grams = tag_vectorizer.fit_transform(corpus)
-        # tag_array = tag_grams.toarray()
-        # tag_array = np.hstack((tag_array, labels))
-        return df
-
-word_2_grams = extract_features(train1_df, TfidfVectorizer(analyzer = "word", ngram_range = (2,2), binary = False))
-# print(word_2_grams)#, word_2_grams.shape)
-# extract_features(train2_df, chars = True)
+        df["text"] = df["text"].apply(lambda txt: nltk.pos_tag(txt))
+        # remove word in (word, tag)
+        df["text"] = df["text"].apply(lambda txt: str(["".join(tup[1]) for tup in txt]))
+    
+    # apply feature extraction function to text column
+    feats = func.fit_transform(df['text'])
+    df['text'] = list(feats.toarray())
+    return df
