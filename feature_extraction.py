@@ -1,4 +1,8 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.pipeline import FeatureUnion
+import nltk
+from import_data import load_pickle
+import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 # from import_data import load_pickle
 import numpy as np

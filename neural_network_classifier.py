@@ -30,16 +30,16 @@ y_test = np.array(y_test)
 
 # define model
 model = Sequential()
-model.add(Dense(256, input_dim=len(X_train[0]), activation='relu', kernel_initializer='he_uniform'))
+model.add(Dense(128, input_dim=len(X_train[0]), activation='relu', kernel_initializer='he_uniform'))
 model.add(Dense(128, input_dim=256, activation='relu', kernel_initializer='he_uniform'))
 
 model.add(Dense(19, activation='softmax'))
-opt = SGD(lr=0.01, momentum=0.2)
+opt = SGD(lr=0.005, momentum=0.5)
 model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
 print('X_train.shape', X_train.shape)
 
-history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=200, verbose=0)
+history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=100, verbose=0)
 
 # evaluate the model
 _, train_acc = model.evaluate(X_train, y_train, verbose=0)
