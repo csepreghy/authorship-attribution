@@ -2,11 +2,12 @@ import pandas as pd
 import time as time
 
 # from neural_network_classifier import run_neural_network
-from xgboost_classifier import run_xgboost
+# from xgboost_classifier import run_xgboost
 from import_data import load_pickle
 from feature_extraction import extract_features
-from svm_classifier import run_svm
+# from svm_classifier import run_svm
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from neural_network_classifier import magic
 
 train1_df = load_pickle('data/train1.pkl')
 test1_df = load_pickle('data/test1.pkl')
@@ -26,8 +27,6 @@ tr1_char_3 = extract_features(train1_df, TfidfVectorizer(analyzer = "char", ngra
 tr1_char_4 = extract_features(train1_df, TfidfVectorizer(analyzer = "char", ngram_range=(4,4), binary = False))
 tr1_char_5 = extract_features(train1_df, TfidfVectorizer(analyzer = "char", ngram_range=(5,5), binary = False))
 
-
-
 tr1_word_1 = extract_features(train1_df, TfidfVectorizer(analyzer = "word", ngram_range=(1,1), binary = False))
 tr1_word_2 = extract_features(train1_df, TfidfVectorizer(analyzer = "word", ngram_range=(2,2), binary = False))
 tr1_word_3 = extract_features(train1_df, TfidfVectorizer(analyzer = "word", ngram_range=(3,3), binary = False))
@@ -39,7 +38,7 @@ tr1_pos_2 = extract_features(train1_df, TfidfVectorizer(analyzer = "word", ngram
 tr1_pos_3 = extract_features(train1_df, TfidfVectorizer(analyzer = "word", ngram_range=(3,3), binary = False), pos_tags = True)
 tr1_pos_4 = extract_features(train1_df, TfidfVectorizer(analyzer = "word", ngram_range=(4,4), binary = False), pos_tags = True)
 tr1_pos_5 = extract_features(train1_df, TfidfVectorizer(analyzer = "word", ngram_range=(5,5), binary = False), pos_tags = True)
-print(run_svm(tr1_pos_5))
+
 
 # df = posf_tr1.rename(columns={"text": "p_truth_E", "author": "Truth"})
 
@@ -51,5 +50,5 @@ print(run_svm(tr1_pos_5))
 # for model in [tr1_pos_1, tr1_pos_2, tr1_pos_3, tr1_pos_4, tr1_pos_5]:
 #     acc = run_svm(model)
 #     print(acc)
-"""
+
 
